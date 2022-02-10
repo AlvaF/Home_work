@@ -1,23 +1,81 @@
-const products = [
-    { id: 1, title: 'Notebook', price: 2000, img: 'https://picsum.photos/300/400?random=1' },
-    { id: 2, title: 'Mouse', price: 20, img: 'https://picsum.photos/300/400?random=2' },
-    { id: 3, title: 'Keyboard', price: 200, img: 'https://picsum.photos/300/400?random=3' },
-    { id: 4, title: 'Gamepad', price: 50, img: 'https://picsum.photos/300/400?random=4' },
-];
-//Функция для формирования верстки каждого товара
-//Добавить в выводе изображение
-const renderProduct = (product) => { //для упрощения функции в аргумент я передала массив
-    return `<div class="product-item">
-                <h3>${product.title}</h3>
-                <p>${product.price}</p>
-                <img src="${product.img}" alt=""></img> 
+class ProductList {
+    constructor(container = '.products') {
+        this.container = container;
+        this.goods = [];
+        this._fetchProducts();//рекомендация, чтобы метод был вызван в текущем классе
+        this.render();//вывод товаров на страницу
+    }
+    _fetchProducts() {
+        this.goods = [
+            { id: 1, title: 'Notebook', price: 2000 },
+            { id: 2, title: 'Mouse', price: 20 },
+            { id: 3, title: 'Keyboard', price: 200 },
+            { id: 4, title: 'Gamepad', price: 50 },
+        ];
+    }
+
+
+
+    render() {
+        const block = document.querySelector(this.container);
+        for (let product of this.goods) {
+            const item = new ProductItem(product);
+            block.insertAdjacentHTML("beforeend", item.render());
+            //           block.innerHTML += item.render();
+        }
+    }
+    sumProducts() {
+        let i = 0;
+        this.goods.forEach((product) => { i += product.price }) //Добавила метод для вычисления суммы товаров
+    }
+}
+
+class ProductItem {
+    constructor(product, img = 'https://via.placeholder.com/200x150') {
+        this.title = product.title;
+        this.id = product.id;
+        this.price = product.price;
+        this.img = img;
+    }
+    render() {
+        return `<div class="product-item">
+                <img src="${this.img}">
+                <h3>${this.title}</h3>
+                <p>${this.price}</p>
                 <button class="buy-btn">Купить</button>
             </div>`
-}; //к каждой карточке товара я добавила рандомно генерирующиеся картинки
-const renderPage = list => {
-    const productsList = list.map(item => renderProduct(item));
-    console.log(...productsList);
-    document.querySelector('.products').innerHTML = productsList.join(''); //для того, чтобы убрать запятую я использовала метод join()
-};
+    }
+}
 
-renderPage(products);
+let list = new ProductList();
+
+class ProductCart { // Добавила пустой класс корзины с методами
+    addProduct() {
+
+    }
+    deleteProduct() {
+
+    }
+    updateProduct() {
+
+    }
+}
+
+//const products = [
+//    {id: 1, title: 'Notebook', price: 2000},
+//    {id: 2, title: 'Mouse', price: 20},
+//    {id: 3, title: 'Keyboard', price: 200},
+//    {id: 4, title: 'Gamepad', price: 50},
+//];
+//
+//const renderProduct = (product,img='https://placehold.it/200x150') => {
+//    return `<div class="product-item">
+//                <img src="${img}">
+//                <h3>${product.title}</h3>
+//                <p>${product.price}</p>
+//                <button class="buy-btn">Купить</button>
+//            </div>`
+//};
+//const renderPage = list => document.querySelector('.products').innerHTML = list.map(item => renderProduct(item)).join('');
+//
+//renderPage(products);
